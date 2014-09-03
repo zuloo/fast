@@ -11,6 +11,6 @@ compile:
 
     gcc -o fast fast.c -lncurses
 
-useage:
+usage:
 
     cat file | fast
