@@ -1,3 +1,6 @@
+#define _XOPEN_SOURCE
+#define _XOPEN_SOURCE_EXTENDED
+
 #include <stdlib.h>
 #include <stddef.h>
 #include <time.h>
@@ -7,6 +10,7 @@
 #include <sys/ioctl.h>
 #include <termios.h>
 #include <curses.h>
+#include <locale.h>
 
 static const char INFO[] = "fare v1.0";
 static const char USAGE[] = "[SPACE] play/pause  [g] |<   [h] <   [j] --   [k] ++   [l] >   [q] quit";
@@ -215,6 +219,7 @@ int main(void){
     freopen("/dev/tty", "rw", stdin);
 
     // enabling ncurses mode
+    setlocale(LC_ALL, "");
     WINDOW *win = initscr();
     keypad(win, TRUE);
     noecho();
@@ -236,8 +241,8 @@ int main(void){
     mvaddstr(height-1,0,USAGE);
 
     attron(COLOR_PAIR(1));
-    mvaddstr(y-1,x,".");
-    mvaddstr(y+1,x,"'");
+    mvaddstr(y-1,x,"\u2304");
+    mvaddstr(y+1,x,"\u2303");
     attroff(COLOR_PAIR(1));
 
     refresh();
