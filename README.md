@@ -9,7 +9,7 @@ dependencies:
 
 compile:
 
-    gcc -o fast fast.c -lncurses
+    make
 
 usage:
 

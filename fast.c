@@ -72,11 +72,9 @@ void printSpeed(int speed)
 // fast read looper
 void fastread(char *data, int x, int y, int speed)
 {
-    int index = 0;
     bool run = false;
     bool pause = false;
     bool last = false;
-    bool back = false;
     char mid[2];
     int ch;
     char *curr = data;
@@ -237,7 +235,6 @@ int main(void){
     attroff(COLOR_PAIR(1));
 
     refresh();
-    int ch;
 
     int speed = 350;
 
