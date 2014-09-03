@@ -1,7 +1,10 @@
 fast
 ====
 
-terminal fast reader for piped input (like more or less)
+A RSVP reader fot the *nix command line (like more or less)
+
+Read faster through piped input!
+
 
 dependencies: 
 
