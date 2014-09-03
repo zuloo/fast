@@ -3,6 +3,11 @@ fast
 
 terminal fast reader for piped input (like more or less)
 
-depemds: libncurses
+depemds: 
+  libncurses
 
-compile with gcc -o fast fast.c -lncurses
+compile:
+  gcc -o fast fast.c -lncurses
+
+useage
+  cat file | fast
