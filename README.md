@@ -3,7 +3,7 @@ fast
 
 terminal fast reader for piped input (like more or less)
 
-depemds: 
+dependencies: 
 
     libncurses
 
