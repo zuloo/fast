@@ -22,7 +22,7 @@ char *inputString(FILE* fp, size_t size){
     while(EOF!=(ch=fgetc(fp))){
         str[len++]=ch;
         if(len==size){
-            str = realloc(str, sizeof(char)*(size+=16));
+            str = realloc(str, sizeof(char)*(size+=1024));
             if(!str)return str;
         }
     }
@@ -206,7 +206,7 @@ void fastread(char *data, int x, int y, int speed)
 
 int main(void){
     int x,y,height,width;
-    char *data = inputString(stdin, 10);
+    char *data = inputString(stdin, 1024);
 
     freopen("/dev/tty", "rw", stdin);
 
