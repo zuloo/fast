@@ -61,10 +61,10 @@ char *backwards(char *data, char *index, char *accept)
         const char *a = accept;
         while (*a != '\0')
             if(*a++ == *index)
-                return (char *) index;
+                return index;
         index--;
     }
-    return (char *) index;
+    return index;
 }
 
 void printSpeed(int speed)
