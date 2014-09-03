@@ -80,6 +80,7 @@ void fastread(char *data, int x, int y, int speed)
     char *curr = data;
     int length = 0;
     int pivot = 0;
+    int maxlen = strlen(data)-1;
     while(true)
     {
         // reset line
@@ -90,10 +91,9 @@ void fastread(char *data, int x, int y, int speed)
         next = strpbrk(next,"\n\t ");
 
         // did we hit the end of the string?
-        if(!next){
+        if(!next || (int)(next-data)>=maxlen){
             run = false;
             last = true;
-            next = strchr(curr,'\0');
         }
 
         length = (int)(next-curr);
@@ -182,7 +182,8 @@ void fastread(char *data, int x, int y, int speed)
                     break;
                 case 'g':
                     // back to start
-                    curr = data;
+                    next = data;
+                    --next;
                     last = false;
                     pause = true;
                     run = true;
@@ -196,8 +197,13 @@ void fastread(char *data, int x, int y, int speed)
         while(last || !run);
 
         // skip multiple whitespaces until a word begins
-        while(strchr("\t\n ",*(++next)))
+        char *before = next;
+        while(next && (int)(next-data)<maxlen && strchr("\t\n ",*(++next)))
             next = strpbrk(next,"\n\t ");
+        if(!next || (int)(next-data)>=maxlen)
+            do
+                next = backwards(data, --next, "\n\t ");
+            while(strchr("\n\t ",*(--next)) && (int)(next-data)>0);
         curr = next;
     }
 }
