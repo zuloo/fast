@@ -11,6 +11,8 @@
 static const char INFO[] = "fare v1.0";
 static const char USAGE[] = "[SPACE] play/pause  [g] |<   [h] <   [j] --   [k] ++   [l] >   [q] quit";
 
+static const char ACCEPT[] = "\n\t ";
+
 char *inputString(FILE* fp, size_t size){
 	//The size is extended by the input with the value of the provisional
 	char *str;
@@ -44,18 +46,21 @@ int pivotLetter(int l)
 		return 4;
 }
 
-char *backwards(char *data, char *index)
+char *backwards(char *data, char *index, char *accept)
 {
 	if((int)(index-data)<0)
-		index = data;
+		return (char *) data;
 
-	while(*index != ' ' && (int)(index-data)>0)
+
+	while((int)(index-data)>0)
 	{
-			index--;
+	    const char *a = accept;
+        while (*a != '\0')
+            if(*a++ == *index)
+                return (char *) index;
+        index--;
 	}
-	if((int)(index-data)>0)
-		index++;
-	return index;
+	return (char *) index;
 }
 
 void fastread(char *data, int x, int y, int speed)
@@ -75,24 +80,29 @@ void fastread(char *data, int x, int y, int speed)
 
 		mvprintw(y,0," ");
 		clrtoeol();
+        
+        char *next = curr;
 
-		char *next = strchr(curr,' ');
-		if(!next){
-			run = false;
-			last = true;
-			next = strchr(curr,'\0');
-		}
+        next = strpbrk(next,"\n\t ");
+        if(!next){
+            run = false;
+            last = true;
+            next = strchr(curr,'\0');
+        }
 
 		length = (int)(next-curr);
 		pivot = pivotLetter(length);
 		
-		char pre[pivot+1];
-		strncpy(pre, curr, pivot);
-		pre[pivot+1] = '\0';
-		mvprintw(y,x-pivot,pre);
+		if(pivot > 0)
+        {
+            char pre[pivot+1];
+            strncpy(pre, curr, pivot);
+            pre[pivot+1] = '\0';
+            mvprintw(y,x-pivot,pre);
+        }
 
 		strncpy(mid, curr+pivot, 1);
-		mid[2] = '\0';
+		mid[1] = '\0';
 		attron(COLOR_PAIR(1));
 		mvprintw(y,x,mid);
 		attroff(COLOR_PAIR(1));
@@ -106,8 +116,6 @@ void fastread(char *data, int x, int y, int speed)
 		}
 	
 		refresh();
-
-		curr = next+1;
 
 		if(pause)
 		{
@@ -147,7 +155,10 @@ void fastread(char *data, int x, int y, int speed)
 					run = true;
 					pause = true;
 					last = false;
-					curr = backwards(data, curr-(length+3));
+					next = backwards(data, next-2, "\n\t ");
+					do
+					    next = backwards(data, --next, "\n\t ");
+					while(strchr("\n\t ",*(--next)) && (int)(next-data)>0);
 					break;
 				case 'l':
 					run = true;
@@ -166,6 +177,10 @@ void fastread(char *data, int x, int y, int speed)
 				usleep(1000*1000*60/speed);
 		}
 		while(last || !run);
+        
+        while(strchr("\t\n ",*(++next)))
+            next = strpbrk(next,"\n\t ");
+        curr = next;
 	}
 }
 
