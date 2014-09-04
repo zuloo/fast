@@ -129,13 +129,25 @@ char *backwards(char *data, char *index,const char *accept)
     return index;
 }
 
+// get the number of bytes in utf8-char↲
+int byteInChar(unsigned char v)
+{
+    if(v<128)
+        return 1;
+    else if(v<224)
+        return 2;
+    else if(v<240)
+        return 3;
+    else 
+        return 4;
+}
+
 // fast read looper
 void fastread(char *data, int x, int y, int speed)
 {
     bool run = false;
     bool pause = false;
     bool last = false;
-    char mid[2];
     int ch;
     char *curr = data;
     int length = 0;
@@ -158,23 +170,49 @@ void fastread(char *data, int x, int y, int speed)
 
         length = (int)(next-curr);
         pivot = pivotLetter(length);
-        
+        int pos = pivot;
         // print characters before pivot letter, if any
         if(pivot > 0)
         {
-            char pre[pivot+1];
-            strncpy(pre, curr, pivot);
+            char pre[pivot*4+1];
+            int offset=0;
+            for(int i=0; i<pivot; i++)
+            {
+                pre[i+offset]=*(curr+i+offset);
+                // if wide character copy the rest and alter offset
+                int charsize = byteInChar((unsigned char)pre[i+offset]);
+                for(int j=1; j<charsize; j++)
+                {
+                    ++offset;
+                    pre[i+offset]=*(curr+i+offset);
+                }
+            }
+            // apply offset
+            pivot+=offset;
+
             pre[pivot] = '\0';
-            mvprintw(y,x-pivot,"%s",pre);
+            mvprintw(y,x-pos,"%s",pre);
         }
 
         // print pivot letter
-        strncpy(mid, curr+pivot, 1);
-        mid[1] = '\0';
+        char mid[5];
+        int offset=0;
+        mid[0]=*(curr+pivot);
+        // if wide character copy the rest and alter offset
+        int charsize = byteInChar((unsigned char)mid[0]);
+        for(int i=1; i<charsize; i++)
+        {
+            ++offset;
+            mid[i]=*(curr+pivot+offset);
+        }
+        // apply offset
+        pivot+=offset;
+
+        mid[1+offset] = '\0';
         attron(COLOR_PAIR(1));
         mvprintw(y,x,"%s",mid);
         attroff(COLOR_PAIR(1));
-        
+
         // print characters after pivot letter, if any
         if(length>pivot+1)
         {
@@ -184,7 +222,7 @@ void fastread(char *data, int x, int y, int speed)
             mvprintw(y,x+1,"%s",end);
         }
         if(*next == '-')
-        	mvprintw(y,x+length-pivot,"-");
+            mvprintw(y,x+length-pivot,"-");
     
         refresh();
 
@@ -263,14 +301,14 @@ void fastread(char *data, int x, int y, int speed)
             next = strpbrk(next,DELIM);
         // if we hit the end go back until last word begins
         if((int)(next-data)>=maxlen)
-		{
-			--next;
+        {
+            --next;
             do
                 next = backwards(data, next, DELIM);
             while(strchr(DELIM,*(--next)) && (int)(next-data)>0);
             next = backwards(data, next, DELIM);
             ++next;
-		}
+        }
         curr = next;
     }
 }
