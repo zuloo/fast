@@ -1,7 +1,7 @@
 fast
 ====
 
-A RSVP reader fot the *nix command line (like more or less)
+An RSVP reader fot the *nix command line (like more or less)
 
 Read faster through piped input!
 
@@ -13,6 +13,7 @@ DANGER: not suitable for epileptics! risk of a seizure!
 dependencies: 
 
     libncurses
+    libncursesw
     pkg-config
 
 compile:
