@@ -1,7 +1,7 @@
 #define _XOPEN_SOURCE
 #define _XOPEN_SOURCE_EXTENDED
 
-#include <./fast.h>
+#include <fast.h>
 #include <stdlib.h>
 #include <stddef.h>
 #include <time.h>
