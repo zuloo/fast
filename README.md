@@ -1,7 +1,7 @@
 fast
 ====
 
-A RSVP reader fot the *nix command line (like more or less)
+An RSVP reader fot the *nix command line (like more or less)
 
 Read faster through piped input!
 
