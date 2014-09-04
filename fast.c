@@ -35,20 +35,21 @@ int main(void)
     cbreak();
     curs_set(0);
 
+    // create colorpair for pivot character
     start_color();
     use_default_colors();
-    short fg,bg;
-    pair_content(0,&fg,&bg);
     init_pair(1,COLOR_RED,-1);
 
-
+    // get terminal size
     getmaxyx(win,height,width);
     y=height/2;
     x=width/2;
 
+    // print info
     mvaddstr(0,0,INFO);
     mvaddstr(height-1,0,USAGE);
 
+    // print pivot markers
     attron(COLOR_PAIR(1));
     mvaddstr(y-1,x,MARKTOP);
     mvaddstr(y+1,x,MARKBOT);
@@ -57,7 +58,6 @@ int main(void)
     refresh();
 
     int speed = 350;
-
     printSpeed(speed);
 
     fastread(data,x,y,speed);
