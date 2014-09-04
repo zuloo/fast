@@ -162,7 +162,7 @@ void fastread(char *data, int x, int y, int speed)
         {
             char pre[pivot+1];
             strncpy(pre, curr, pivot);
-            pre[pivot+1] = '\0';
+            pre[pivot] = '\0';
             mvprintw(y,x-pivot,pre);
         }
 
@@ -257,10 +257,16 @@ void fastread(char *data, int x, int y, int speed)
         // skip multiple whitespaces until a word begins
         while(next && (int)(next-data)<maxlen && strchr("\t\n ",*(++next)))
             next = strpbrk(next,"\n\t ");
-        if(!next || (int)(next-data)>=maxlen)
+        // if we hit the end go back until last word begins
+        if((int)(next-data)>=maxlen)
+		{
+			--next;
             do
-                next = backwards(data, --next, "\n\t ");
+                next = backwards(data, next, "\n\t ");
             while(strchr("\n\t ",*(--next)) && (int)(next-data)>0);
+            next = backwards(data, next, "\n\t ");
+            ++next;
+		}
         curr = next;
     }
 }
