@@ -168,8 +168,16 @@ void fastread(char *data, int x, int y, int speed)
             last = true;
         }
 
+        // length of the chararray (not neccessarely charachter count in utf8)
         length = (int)(next-curr);
-        pivot = pivotLetter(length);
+
+        // calulate character count
+        int charlength = 0;
+        for(int i=0; i<length; i+=byteInChar((unsigned char)*(curr+i)))
+            ++charlength;
+
+        // which letter to highlight
+        pivot = pivotLetter(charlength);
         int pos = pivot;
         // print characters before pivot letter, if any
         if(pivot > 0)
