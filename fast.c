@@ -10,28 +10,28 @@
 #include <sys/select.h>
 #include <sys/ioctl.h>
 #include <termios.h>
-#include <curses.h>
+#include <ncursesw/curses.h>
 #include <locale.h>
 
+/*
 static const char MARKTOP[] = ".";
 static const char MARKBOT[] = "'";
-/*
+*/
 static const char MARKTOP[] = "\u2304";
 static const char MARKBOT[] = "\u2303";
-*/
 static const char INFO[] = "fast v1.0";
 static const char USAGE[] = "[SPACE] play/pause  [g] |<   [h] <   [j] --   [k] ++   [l] >   [q] quit";
 static const char DELIM[] = "\n\t- ";
 
 int main(void)
 {
+    setlocale(LC_ALL, "en_US.UTF8");
     int x,y,height,width;
     char *data = inputString(stdin, 1024);
 
     freopen("/dev/tty", "rw", stdin);
 
     // enabling ncurses mode
-    setlocale(LC_ALL, "");
     WINDOW *win = initscr();
     keypad(win, TRUE);
     noecho();
@@ -165,14 +165,14 @@ void fastread(char *data, int x, int y, int speed)
             char pre[pivot+1];
             strncpy(pre, curr, pivot);
             pre[pivot] = '\0';
-            mvprintw(y,x-pivot,pre);
+            mvprintw(y,x-pivot,"%s",pre);
         }
 
         // print pivot letter
         strncpy(mid, curr+pivot, 1);
         mid[1] = '\0';
         attron(COLOR_PAIR(1));
-        mvprintw(y,x,mid);
+        mvprintw(y,x,"%s",mid);
         attroff(COLOR_PAIR(1));
         
         // print characters after pivot letter, if any
@@ -181,7 +181,7 @@ void fastread(char *data, int x, int y, int speed)
             char end[length-pivot];
             strncpy(end, curr+pivot+1, length-pivot-1);
             end[length-pivot-1] = '\0';
-            mvprintw(y,x+1,end);
+            mvprintw(y,x+1,"%s",end);
         }
         if(*next == '-')
         	mvprintw(y,x+length-pivot,"-");
