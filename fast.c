@@ -201,7 +201,6 @@ void fastread(char *data, int x, int y, int speed)
         while(last || !run);
 
         // skip multiple whitespaces until a word begins
-        char *before = next;
         while(next && (int)(next-data)<maxlen && strchr("\t\n ",*(++next)))
             next = strpbrk(next,"\n\t ");
         if(!next || (int)(next-data)>=maxlen)
