@@ -21,6 +21,7 @@ static const char MARKBOT[] = "\u2303";
 */
 static const char INFO[] = "fast v1.0";
 static const char USAGE[] = "[SPACE] play/pause  [g] |<   [h] <   [j] --   [k] ++   [l] >   [q] quit";
+static const char DELIM[] = "\n\t- ";
 
 int main(void)
 {
@@ -76,7 +77,8 @@ void printSpeed(int speed)
 }
 
 // read all the stuff from the pipe
-char *inputString(FILE* fp, size_t size){
+char *inputString(FILE* fp, size_t size)
+{
     //The size is extended by the input with the value of the provisional
     char *str;
     int ch;
@@ -111,7 +113,7 @@ int pivotLetter(int l)
 }
 
 // strpbrk backwards, data marks minimal index
-char *backwards(char *data, char *index, char *accept)
+char *backwards(char *data, char *index,const char *accept)
 {
     if((int)(index-data)<0)
         return (char *) data;
@@ -146,7 +148,7 @@ void fastread(char *data, int x, int y, int speed)
         clrtoeol();
         
         char *next = curr;
-        next = strpbrk(next,"\n\t ");
+        next = strpbrk(next,DELIM);
 
         // did we hit the end of the string?
         if(!next || (int)(next-data)>=maxlen){
@@ -181,6 +183,8 @@ void fastread(char *data, int x, int y, int speed)
             end[length-pivot-1] = '\0';
             mvprintw(y,x+1,end);
         }
+        if(*next == '-')
+        	mvprintw(y,x+length-pivot,"-");
     
         refresh();
 
@@ -228,10 +232,10 @@ void fastread(char *data, int x, int y, int speed)
                     run = true;
                     pause = true;
                     last = false;
-                    next = backwards(data, next-2, "\n\t ");
+                    next = backwards(data, next-2, DELIM);
                     do
-                        next = backwards(data, --next, "\n\t ");
-                    while(strchr("\n\t ",*(--next)) && (int)(next-data)>0);
+                        next = backwards(data, --next, DELIM);
+                    while(strchr(DELIM,*(--next)) && (int)(next-data)>0);
                     break;
                 case 'l':
                     // next word, pause
@@ -255,16 +259,16 @@ void fastread(char *data, int x, int y, int speed)
         while(last || !run);
 
         // skip multiple whitespaces until a word begins
-        while(next && (int)(next-data)<maxlen && strchr("\t\n ",*(++next)))
-            next = strpbrk(next,"\n\t ");
+        while(next && (int)(next-data)<maxlen && strchr(DELIM,*(++next)))
+            next = strpbrk(next,DELIM);
         // if we hit the end go back until last word begins
         if((int)(next-data)>=maxlen)
 		{
 			--next;
             do
-                next = backwards(data, next, "\n\t ");
-            while(strchr("\n\t ",*(--next)) && (int)(next-data)>0);
-            next = backwards(data, next, "\n\t ");
+                next = backwards(data, next, DELIM);
+            while(strchr(DELIM,*(--next)) && (int)(next-data)>0);
+            next = backwards(data, next, DELIM);
             ++next;
 		}
         curr = next;

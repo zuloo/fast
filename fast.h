@@ -12,7 +12,7 @@ char *inputString(FILE* fp, size_t size);
 int pivotLetter(int l);
 
 // strpbrk backwards, data marks minimal index
-char *backwards(char *data, char *index, char *accept);
+char *backwards(char *data, char *index,const char *accept);
 
 // fast read looper
 void fastread(char *data, int x, int y, int speed);
