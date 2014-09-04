@@ -7,7 +7,12 @@
 #include <time.h>
 #include <string.h>
 #include <unistd.h>
+
+#if defined __APPLE__ && defined __MACH__
+#include <ncurses.h>
+#else
 #include <ncursesw/curses.h>
+#endif
 #include <locale.h>
 
 /*
@@ -22,7 +27,7 @@ static const char DELIM[] = "\n\t- ";
 
 int main(void)
 {
-    setlocale(LC_ALL, "en_US.UTF8");
+    setlocale(LC_ALL, "en_US.UTF-8");
     int x,y,height,width;
     char *data = inputString(stdin, 1024);
 
