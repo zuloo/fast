@@ -1,6 +1,7 @@
 #define _XOPEN_SOURCE
 #define _XOPEN_SOURCE_EXTENDED
 
+#include <./fast.h>
 #include <stdlib.h>
 #include <stddef.h>
 #include <time.h>
@@ -12,8 +13,67 @@
 #include <curses.h>
 #include <locale.h>
 
-static const char INFO[] = "fare v1.0";
+static const char MARKTOP[] = ".";
+static const char MARKBOT[] = "'";
+/*
+static const char MARKTOP[] = "\u2304";
+static const char MARKBOT[] = "\u2303";
+*/
+static const char INFO[] = "fast v1.0";
 static const char USAGE[] = "[SPACE] play/pause  [g] |<   [h] <   [j] --   [k] ++   [l] >   [q] quit";
+
+int main(void)
+{
+    int x,y,height,width;
+    char *data = inputString(stdin, 1024);
+
+    freopen("/dev/tty", "rw", stdin);
+
+    // enabling ncurses mode
+    setlocale(LC_ALL, "");
+    WINDOW *win = initscr();
+    keypad(win, TRUE);
+    noecho();
+    cbreak();
+    curs_set(0);
+
+    start_color();
+    use_default_colors();
+    short fg,bg;
+    pair_content(0,&fg,&bg);
+    init_pair(1,COLOR_RED,-1);
+
+
+    getmaxyx(win,height,width);
+    y=height/2;
+    x=width/2;
+
+    mvaddstr(0,0,INFO);
+    mvaddstr(height-1,0,USAGE);
+
+    attron(COLOR_PAIR(1));
+    mvaddstr(y-1,x,MARKTOP);
+    mvaddstr(y+1,x,MARKBOT);
+    attroff(COLOR_PAIR(1));
+
+    refresh();
+
+    int speed = 350;
+
+    printSpeed(speed);
+
+    fastread(data,x,y,speed);
+
+    free(data);
+    endwin();
+    return 0;
+}
+
+void printSpeed(int speed)
+{
+    mvprintw(0,15,"words / minute: %i",speed);
+    clrtoeol();
+}
 
 // read all the stuff from the pipe
 char *inputString(FILE* fp, size_t size){
@@ -65,12 +125,6 @@ char *backwards(char *data, char *index, char *accept)
         index--;
     }
     return index;
-}
-
-void printSpeed(int speed)
-{
-    mvprintw(0,15,"words / minute: %i",speed);
-    clrtoeol();
 }
 
 // fast read looper
@@ -211,48 +265,3 @@ void fastread(char *data, int x, int y, int speed)
     }
 }
 
-int main(void){
-    int x,y,height,width;
-    char *data = inputString(stdin, 1024);
-
-    freopen("/dev/tty", "rw", stdin);
-
-    // enabling ncurses mode
-    setlocale(LC_ALL, "");
-    WINDOW *win = initscr();
-    keypad(win, TRUE);
-    noecho();
-    cbreak();
-    curs_set(0);
-
-    start_color();
-    use_default_colors();
-    short fg,bg;
-    pair_content(0,&fg,&bg);
-    init_pair(1,COLOR_RED,-1);
-
-
-    getmaxyx(win,height,width);
-    y=height/2;
-    x=width/2;
-
-    mvaddstr(0,0,INFO);
-    mvaddstr(height-1,0,USAGE);
-
-    attron(COLOR_PAIR(1));
-    mvaddstr(y-1,x,"\u2304");
-    mvaddstr(y+1,x,"\u2303");
-    attroff(COLOR_PAIR(1));
-
-    refresh();
-
-    int speed = 350;
-
-    printSpeed(speed);
-
-    fastread(data,x,y,speed);
-
-    free(data);
-    endwin();
-    return 0;
-}

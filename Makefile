@@ -1,4 +1,4 @@
-CFLAGS=$(shell pkg-config --cflags ncurses) -Wall -std=c99
+CFLAGS=$(shell pkg-config --cflags ncurses) -Wall -std=c99 -I.
 LDLIBS=$(shell pkg-config --libs ncurses)
 
 .PHONY: all clean
