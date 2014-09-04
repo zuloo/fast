@@ -7,9 +7,6 @@
 #include <time.h>
 #include <string.h>
 #include <unistd.h>
-#include <sys/select.h>
-#include <sys/ioctl.h>
-#include <termios.h>
 #include <ncursesw/curses.h>
 #include <locale.h>
 
@@ -70,6 +67,7 @@ int main(void)
     return 0;
 }
 
+// print the "words per minute" value
 void printSpeed(int speed)
 {
     mvprintw(0,15,"words / minute: %i",speed);
