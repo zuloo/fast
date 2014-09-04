@@ -12,6 +12,7 @@
 #include <termios.h>
 #include <curses.h>
 #include <locale.h>
+
 static const char MARKTOP[] = ".";
 static const char MARKBOT[] = "'";
 /*
