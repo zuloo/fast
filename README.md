@@ -13,6 +13,7 @@ DANGER: not suitable for epileptics! risk of a seizure!
 dependencies: 
 
     libncurses
+    pkg-config
 
 compile:
 
