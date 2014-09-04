@@ -1,7 +1,7 @@
 fast
 ====
 
-An RSVP reader fot the *nix command line (like more or less)
+An RSVP reader for the *nix command line (like more or less)
 
 Read faster through piped input!
 
@@ -14,7 +14,6 @@ dependencies:
 
     libncurses
     libncursesw
-    pkg-config
 
 compile:
 
