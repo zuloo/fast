@@ -22,7 +22,7 @@ static const char MARKBOT[] = "'";
 static const char MARKTOP[] = "\u2304";
 static const char MARKBOT[] = "\u2303";
 static const char INFO[] = "fast v1.0";
-static const char USAGE[] = "[SPACE] play/pause  [g] |<   [h] <   [j] --   [k] ++   [l] >   [q] quit";
+static const char USAGE[] = "[ space \u25ae\u25b6 ]   [ g\u2595\u25c0 ]   [ h \u25c0\u25c0 ]   [ j + ]   [ k ++ ]   [ l \u25b6\u25b6 ]    [ quit ]";
 static const char DELIM[] = "\n\t- ";
 
 int main(void)
@@ -75,7 +75,7 @@ int main(void)
 // print the "words per minute" value
 void printSpeed(int speed)
 {
-    mvprintw(0,15,"words / minute: %i",speed);
+    mvprintw(0,10," -  reading @ %i wpm",speed);
     clrtoeol();
 }
 
