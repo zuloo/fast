@@ -304,9 +304,12 @@ void fastread(char *data, int x, int y, int speed)
             }
             int delay = 0;
             if(charlength>8)
-                delay = 100;
-            else if(charlength>12)
                 delay = 200;
+            else if(charlength>12)
+                delay = 400;
+            else if(charlength>16)
+                delay = 600;
+
             if(run)
                 usleep(1000*1000*60/speed+delay);
         }
