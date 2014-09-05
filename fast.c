@@ -11,7 +11,7 @@
 #if defined __APPLE__ && defined __MACH__
 #include <ncurses.h>
 #else
-#include <ncursesw/curses.h>
+#include <curses.h>
 #endif
 #include <locale.h>
 
